@@ -11,7 +11,7 @@ import SwiftUI
 struct LearnCombineApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(model: ContentViewVM())
         }
     }
 }
