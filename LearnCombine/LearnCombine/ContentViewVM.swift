@@ -25,7 +25,7 @@ enum SignInValidation: LocalizedError {
 }
 
 class ContentViewVM: ObservableObject {
-    @Published var userName: String = ""
+    @Published var userName: String = "ab"
     @Published var password: String = ""
     var signInMessage: String? = ""
     @Published var isAlertPresented: Bool = false

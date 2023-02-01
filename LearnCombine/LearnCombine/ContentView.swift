@@ -24,15 +24,31 @@ View should contain
 
 struct ContentView: View {
     @ObservedObject private var viewModel: ContentViewVM
+    @State private var welcomeLabelText: String = "Welcome!!"
+    @State private var bindingColor = Color.red
+    @ObservedObject private var theme: Theme = Theme()
+    var text = Text("welcomeLabelText")
     
     init(model: ContentViewVM) {
         viewModel = ContentViewVM()
+        
+        // self retruning functions with struct will return a copied instance.
+        var text = Text("some text")
+        var newText = text.foregroundColor(.red)
+        print(MemoryAddress(of: &newText))
+        print(MemoryAddress(of: &text))
+        
+        var sampleStruct = MyStruct()
+        var editedStruct = sampleStruct.edit()
+        print(MemoryAddress(of: &sampleStruct))
+        print(MemoryAddress(of: &editedStruct))
     }
     
     var body: some View {
         VStack(alignment: .center, spacing: 20
         ) {
-            Text("Welcome!")
+            text
+                .foregroundColor(bindingColor)
             TextField("Username", text: $viewModel.userName)
                 .textFieldStyle(.roundedBorder)
                 .frame(height: 60)
@@ -54,6 +70,11 @@ struct ContentView: View {
                     print("Okay Click")
                 }), secondaryButton: .default(Text("Dismiss")))
             }
+            Button("State Changer") {
+                bindingColor = .black
+            }
+            ReusableView(vm: MyVM())
+                .environmentObject(theme)
         }
         .padding(.init(top: 100, leading: 45, bottom: 30, trailing: 45))
     }
@@ -63,4 +84,17 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(model: ContentViewVM())
     }
+}
+
+struct MyStruct {
+    var i: Int = 1
+    
+    mutating func edit() -> Self {
+        i += 1
+        return self
+    }
+}
+
+class Theme: ObservableObject {
+    @Published var color: Color = .red
 }
